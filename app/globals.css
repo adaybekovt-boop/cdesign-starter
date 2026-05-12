@@ -1,0 +1,257 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS — never hardcode hex in components, always use vars
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  color-scheme: light dark;
+
+  /* ─── Color system: Linear-dark recipe by default ─── */
+  --background: light-dark(#fafaf7, #08090a);
+  --foreground: light-dark(#0a0a0a, #f7f8f8);
+  --elevated: light-dark(#f1f2f4, #151516);
+  --elevated-2: light-dark(#e8e9ec, #1c1d1f);
+  --muted: light-dark(#6b7280, #8a8f98);
+  --border: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.08));
+  --border-strong: light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.15));
+  --accent: light-dark(#475ba1, #5e6ad2);
+  --accent-muted: light-dark(rgba(71, 91, 161, 0.15), rgba(94, 106, 210, 0.15));
+
+  /* ─── Fluid type scale (clamp-based, no breakpoints needed) ─── */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.1vw, 0.8125rem);
+  --text-sm: clamp(0.875rem, 0.85rem + 0.15vw, 0.9375rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.0625rem);
+  --text-lg: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+  --text-xl: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.3rem + 0.7vw, 2rem);
+  --text-3xl: clamp(2rem, 1.6rem + 1.5vw, 3rem);
+  --text-4xl: clamp(2.5rem, 2rem + 2vw, 3.75rem);
+  --text-5xl: clamp(3rem, 2.4rem + 3vw, 5rem);
+  --text-6xl: clamp(3.5rem, 2.8rem + 4vw, 6rem);
+  --text-display: clamp(4rem, 3rem + 6vw, 8rem);
+
+  /* ─── Letter spacing ─── */
+  --tracking-tightest: -0.05em;
+  --tracking-tighter: -0.04em;
+  --tracking-tight: -0.03em;
+  --tracking-normal: -0.01em;
+  --tracking-wide: 0.02em;
+
+  /* ─── Line height ─── */
+  --leading-display: 1.02;
+  --leading-tight: 1.1;
+  --leading-snug: 1.3;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+
+  /* ─── Spacing (8px baseline) ─── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+  --space-48: 12rem;
+
+  /* ─── Radius ─── */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* ═══ MULTI-LAYER SHADOWS — premium physical light simulation ═══
+     NEVER use single-layer flat shadows like `0 4px 8px rgba(0,0,0,0.2)`.
+     Real shadows = ambient + directional + ground contact. */
+  --shadow-xs: 
+    0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 2px 6px rgba(0, 0, 0, 0.03);
+  --shadow-md: 
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 8px rgba(0, 0, 0, 0.04),
+    0 8px 16px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    0 12px 32px rgba(0, 0, 0, 0.06),
+    0 24px 48px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    0 8px 16px rgba(0, 0, 0, 0.06),
+    0 24px 48px rgba(0, 0, 0, 0.08),
+    0 48px 96px rgba(0, 0, 0, 0.04);
+
+  /* Glassmorphism inner highlight (required when using backdrop-blur) */
+  --shadow-glass-inset:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+
+  /* ─── Easing (Emil Kowalski standards) ─── */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-snappy: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TAILWIND v4 THEME — map design tokens to Tailwind utility classes
+   ═══════════════════════════════════════════════════════════════ */
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-elevated: var(--elevated);
+  --color-elevated-2: var(--elevated-2);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-muted: var(--accent-muted);
+
+  --font-sans: var(--font-hanken), system-ui, sans-serif;
+  --font-display: var(--font-migra), Georgia, serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+
+  --ease-out-expo: var(--ease-out-expo);
+  --ease-spring: var(--ease-spring);
+  --ease-snappy: var(--ease-snappy);
+  --ease-ios: var(--ease-ios);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BASE STYLES
+   ═══════════════════════════════════════════════════════════════ */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: auto; /* Lenis handles this */
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-hanken), system-ui, sans-serif;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-normal);
+  min-height: 100dvh; /* never use h-screen — broken on mobile */
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--background);
+}
+
+/* ─── Typography defaults ─── */
+h1, h2, h3, h4 {
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-5xl);
+  letter-spacing: var(--tracking-tighter);
+  line-height: var(--leading-display);
+}
+
+h2 { font-size: var(--text-4xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+
+p {
+  text-wrap: pretty;
+  max-width: 65ch;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LENIS smooth scroll integration
+   ═══════════════════════════════════════════════════════════════ */
+
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   UTILITY ANIMATIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.01); }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+
+.idle-breathe {
+  animation: breathe 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--elevated) 0%, var(--border) 50%, var(--elevated) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+  border-radius: var(--radius-md);
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
