@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import { SmoothScrollProvider } from "@/lib/lenis";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { GrainOverlay } from "@/components/ui/grain-overlay";
+import { DeviceTierProvider } from "@/components/ui/device-tier-provider";
+import { LiquidGlassFilter } from "@/components/ui/liquid-glass-filter";
 import "./globals.css";
 
 // Hanken Grotesk — primary body font (free via Fontshare, NOT slop like Geist/Inter)
@@ -42,6 +44,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${hankenGrotesk.variable} ${migra.variable} ${jetbrainsMono.variable} dark`}>
       <body>
+        <DeviceTierProvider />
+        <LiquidGlassFilter />
         <SmoothScrollProvider>
           <ScrollProgress />
           {children}
