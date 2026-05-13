@@ -20,6 +20,7 @@
     "clsx": "^2.1.1",
     "tailwind-merge": "^2.5.5",
     "lucide-react": "^0.460.0",
+    "tailwind-variants": "^0.3.0",
     "three": "^0.171.0",
     "@react-three/fiber": "^9.0.0-rc.5",
     "@react-three/drei": "^9.117.3",
@@ -35,6 +36,8 @@
     "@tailwindcss/postcss": "^4.0.0-beta.6",
     "postcss": "^8.4.49",
     "eslint": "^9.16.0",
-    "eslint-config-next": "^15.0.3"
+    "eslint-config-next": "^15.0.3",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.6"
   }
 }

@@ -255,3 +255,182 @@ html.lenis {
     scroll-behavior: auto !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOTION ISLANDS — render containment for animated sections
+   Isolates paint/layout to prevent full-tree redraws.
+   Apply to every section that contains animations.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Offscreen sections: skip rendering until near viewport */
+.motion-section {
+  content-visibility: auto;
+  contain: layout paint style;
+  contain-intrinsic-size: 0 800px; /* hint for layout calc while offscreen */
+}
+
+/* Animated subtrees: isolate paint, prevent parent repaint */
+.motion-island {
+  contain: layout paint;
+  isolation: isolate;
+}
+
+/* WARNING: do NOT use .motion-section on:
+   - pinned ScrollTrigger sections (contain breaks sticky)
+   - R3F <Canvas> wrappers (breaks overflow)
+   Use .motion-island for those instead. */
+
+/* ═══════════════════════════════════════════════════════════════
+   DEVICE TIER — motion intensity CSS variables
+   Set by DeviceTierProvider via data-tier attribute on <html>.
+   Use these vars to scale animation intensity by tier.
+
+   Example:
+     gsap.to(el, { y: -100 * parseFloat(getComputedStyle(document.documentElement)
+       .getPropertyValue('--motion-distance')) });
+   ═══════════════════════════════════════════════════════════════ */
+
+html[data-tier="full"] {
+  --motion-distance: 1;
+  --motion-blur: 1;
+  --motion-depth: 1;
+  --motion-parallax: 1;
+}
+
+html[data-tier="balanced"] {
+  --motion-distance: 0.55;
+  --motion-blur: 0;
+  --motion-depth: 0.45;
+  --motion-parallax: 0.4;
+}
+
+html[data-tier="low"] {
+  --motion-distance: 0.25;
+  --motion-blur: 0;
+  --motion-depth: 0;
+  --motion-parallax: 0;
+}
+
+/* Hide R3F canvas on low tier (no 3D on very weak devices) */
+html[data-tier="low"] canvas {
+  display: none;
+}
+
+/* Disable pinned scroll films on balanced/low (expensive) */
+html[data-tier="low"] [data-scroll-film] {
+  position: static !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LIQUID GLASS — progressive enhancement, NOT default
+   Default: CSS glass (blur + tint + border + inner shadow)
+   Enhanced: SVG displacement (desktop, full tier only)
+   Lite: reduced blur, no displacement
+   Off: flat fallback
+   ═══════════════════════════════════════════════════════════════ */
+
+.liquid-button {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 9999px;
+  padding: 0.9rem 1.35rem;
+  color: white;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08)),
+    rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -12px 28px rgba(0, 0, 0, 0.18),
+    0 18px 48px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px) saturate(1.45) contrast(1.08);
+  -webkit-backdrop-filter: blur(18px) saturate(1.45) contrast(1.08);
+  transform: translateZ(0);
+  cursor: pointer;
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    background 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.liquid-button::before {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.38), transparent 28%),
+    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.18), transparent 32%);
+  filter: blur(10px);
+  opacity: 0.8;
+}
+
+.liquid-button__shine {
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 34%),
+    linear-gradient(315deg, rgba(255, 255, 255, 0.12), transparent 42%);
+  mix-blend-mode: screen;
+}
+
+.liquid-button:hover {
+  transform: translateY(-1px) scale(1.015);
+}
+
+.liquid-button:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.liquid-button-strong {
+  backdrop-filter: blur(26px) saturate(1.8) contrast(1.12);
+  -webkit-backdrop-filter: blur(26px) saturate(1.8) contrast(1.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-button {
+    transition: none;
+  }
+}
+
+/* ─── Liquid refraction (SVG displacement) — desktop + full tier only ─── */
+@supports (backdrop-filter: blur(1px)) {
+  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+    html[data-liquid-tier='full'] .liquid-refract::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      backdrop-filter: url(#liquid-glass-filter) blur(14px) saturate(1.5);
+      -webkit-backdrop-filter: blur(14px) saturate(1.5);
+      opacity: 0.75;
+      mask-image: linear-gradient(180deg, black, rgba(0, 0, 0, 0.7));
+    }
+  }
+}
+
+/* ─── Lite tier — reduced blur, no displacement ─── */
+html[data-liquid-tier='lite'] .liquid-button {
+  backdrop-filter: blur(10px) saturate(1.15);
+  -webkit-backdrop-filter: blur(10px) saturate(1.15);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+html[data-liquid-tier='lite'] .liquid-refract::after,
+html[data-liquid-tier='off'] .liquid-refract::after {
+  display: none;
+}
+
+/* ─── Off tier — flat fallback ─── */
+html[data-liquid-tier='off'] .liquid-button {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.14);
+}

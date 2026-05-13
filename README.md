@@ -52,6 +52,7 @@ Rename to match `app/layout.tsx` paths:
 ### Sections (`components/sections/`)
 - `pinned-scrub.tsx` — Stripe/Vercel pinned content swap
 - `multi-layer-parallax.tsx` — 3-layer cinematic depth
+- `scroll-film.tsx` — **Cinematic master timeline** (one pinned section, multiple "shots", DOM↔R3F sync via shared MotionValue)
 - `hero-example.tsx` — placeholder hero (replace this)
 
 ### 3D (`components/three/`)
@@ -63,6 +64,12 @@ Rename to match `app/layout.tsx` paths:
 
 ### UI primitives (cont.)
 - `svg-path-draw.tsx` — animate SVG paths drawing themselves (logo line reveal)
+- `frame-cut.tsx` — **cinematic transition overlay** (flash/black/wipe). Max 1-2 per page.
+
+### Lib helpers (`lib/`)
+- `lenis.tsx` — Lenis bound to GSAP ticker (provider)
+- `utils.ts` — `cn()` for class merging
+- `scene-helpers.ts` — `sceneProgress()` and `hit()` for cinematic ScrollFilm scene mapping and rhythm pulses
 
 ## Asset preparation cheatsheet
 
