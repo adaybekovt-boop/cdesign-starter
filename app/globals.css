@@ -117,9 +117,12 @@
   --color-accent: var(--accent);
   --color-accent-muted: var(--accent-muted);
 
-  --font-sans: var(--font-hanken), system-ui, sans-serif;
-  --font-display: var(--font-migra), Georgia, serif;
-  --font-mono: var(--font-jetbrains-mono), monospace;
+  /* next/font/google sets --font-sans on <html> via className; this @theme
+     entry registers the token so Tailwind generates the font-sans utility. */
+  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+  /* Replace with Migra when .woff2 files are added to public/fonts/ */
+  --font-display: "Georgia", "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 
   --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
@@ -150,7 +153,7 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-hanken), system-ui, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   letter-spacing: var(--tracking-normal);
