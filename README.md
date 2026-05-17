@@ -133,7 +133,6 @@ The skill:
 1. Reads your brief and reference
 2. Runs Director's Roll (picks one visual vibe)
 3. Generates landing using this starter's components
-4. Critic agent audits — up to 3 iterations until PASS
 
 ## License
 
