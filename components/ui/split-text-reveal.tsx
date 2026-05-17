@@ -31,8 +31,17 @@ export function SplitTextReveal({
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current || !ref.current.isConnected) return;
+    if (ref.current.dataset.cdesignSplit === "true") return;
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
+
     const split = new SplitType(ref.current, { types: "lines,words" });
+    ref.current.dataset.cdesignSplit = "true";
 
     // Wrap each line in overflow-hidden for masked reveal
     split.lines?.forEach((line) => {
@@ -54,6 +63,9 @@ export function SplitTextReveal({
 
     return () => {
       split.revert();
+      if (ref.current) {
+        delete ref.current.dataset.cdesignSplit;
+      }
     };
   }, [stagger, delay]);
 
