@@ -18,7 +18,7 @@ export default function Home() {
           - frame-cut.tsx           (cinematic flash/wipe transition overlay)
           - scroll-progress.tsx     (already mounted in layout)
           - grain-overlay.tsx       (already mounted in layout)
-          - liquid-tier-provider.tsx (already mounted — sets data-liquid-tier on <html>)
+          - DeviceTierProvider (already mounted — sets data-liquid-tier on <html>)
           - liquid-glass-filter.tsx  (already mounted — global SVG displacement filter)
 
           Sections (components/sections/):
