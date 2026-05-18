@@ -2,6 +2,14 @@
 
 Pre-configured Next.js 15 starter for the **cdesign** Claude Code skill. Drop-in cinematic landing page foundation that defeats AI slop.
 
+## Requirements
+
+- Node.js 20+
+- npm 10+
+- Git (for `create-next-app` template)
+- Claude Code with Skills support
+- Git Bash or WSL on Windows (for `install.sh`)
+
 ## Stack
 
 - **Next.js 15** (App Router) + React 19 + TypeScript
@@ -24,19 +32,16 @@ npm install
 npm run dev
 ```
 
-## Adding fonts
+## Fonts
 
-The starter expects fonts in `public/fonts/`. Download free from:
+Hanken Grotesk is loaded via `next/font/google` by default - no setup required.
 
-- **Hanken Grotesk**: https://www.fontshare.com/fonts/hanken-grotesk → variable woff2
-- **Migra**: https://www.fontshare.com/fonts/migra → Regular + Italic woff2
-- **JetBrains Mono**: https://www.jetbrains.com/lp/mono/ → variable woff2
+Optional local fonts for full typography system:
+- **Migra** (display) - place `Migra-Regular.woff2` and `Migra-Italic.woff2` in `public/fonts/`
+- **JetBrains Mono** (mono) - place `JetBrainsMono-Variable.woff2` in `public/fonts/`
 
-Rename to match `app/layout.tsx` paths:
-- `HankenGrotesk-Variable.woff2`
-- `Migra-Regular.woff2`
-- `Migra-Italic.woff2`
-- `JetBrainsMono-Variable.woff2`
+To switch to local fonts, update `app/layout.tsx` to use `next/font/local`.
+If font files are missing, the build will fall back to system fonts.
 
 ## Pre-built components
 
