@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
+    // cdesign skill: change `lang` based on generated copy language — ru / kk / en. See SKILL.md Phase 3.
     <html lang="en" className={`${hanken.variable} dark`}>
       <body>
         <DeviceTierProvider />
