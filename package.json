@@ -25,9 +25,9 @@
     "lucide-react": "^0.460.0",
     "tailwind-variants": "^0.3.0",
     "three": "^0.171.0",
-    "@react-three/fiber": "^9.0.0-rc.5",
-    "@react-three/drei": "^9.117.3",
-    "@react-three/postprocessing": "^2.16.3"
+    "@react-three/fiber": "^9.6.1",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/postprocessing": "^3.0.4"
   },
   "devDependencies": {
     "@types/node": "^22.10.1",
@@ -35,8 +35,8 @@
     "@types/react-dom": "^19.0.1",
     "@types/three": "^0.171.0",
     "typescript": "^5.7.2",
-    "tailwindcss": "^4.0.0-beta.6",
-    "@tailwindcss/postcss": "^4.0.0-beta.6",
+    "tailwindcss": "^4.3.0",
+    "@tailwindcss/postcss": "^4.3.0",
     "postcss": "^8.4.49",
     "eslint": "^9.16.0",
     "eslint-config-next": "^15.0.3",
