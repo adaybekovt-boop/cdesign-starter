@@ -118,12 +118,62 @@ Multi-layer shadows are pre-configured in `app/globals.css` and respect `light-d
 
 ## What this starter prevents
 
+The starter ships with defaults that block the most common AI-slop and mobile-perf failure modes:
+
 - ❌ AI-slop fonts (Geist as default, Inter, Roboto, Space Grotesk, Instrument Serif)
 - ❌ Single-layer flat shadows (`0 4px 8px rgba(0,0,0,0.2)`)
 - ❌ Hardcoded hex colors (forces tokens)
-- ❌ `h-screen` (broken on mobile — uses `min-h-[100dvh]` everywhere)
+- ❌ `h-screen` / raw `100vh` (broken on mobile — uses `min-h-[100dvh]` everywhere)
 - ❌ Mismatched RAF loops (Lenis + GSAP sync from setup)
 - ❌ Generic centered hero (example is left-aligned)
+- ❌ `Lenis syncTouch: true` (broken iOS scroll — starter uses `false`)
+- ❌ R3F Canvas without `PerformanceMonitor` (every Canvas adapts DPR 1↔2)
+- ❌ Permanent `will-change` on reusable components (use `useTemporaryWillChange`)
+- ❌ Magnetic / tilt effects firing on touch devices (gated by `(pointer: fine)`)
+- ❌ Missing `viewport-fit: cover` for notched devices
+
+## Audit script
+
+Run the bundled static audit before handoff:
+
+```bash
+npm run audit:cdesign
+```
+
+It scans `app/`, `components/`, `lib/`, `hooks/`, `workers/` and reports `PASS` / `FAIL` / `WARN` with file:line for each of: `h-screen`, raw `100vh`, `transition: all`, `<img>`, `key={index}`, `syncTouch: true`, permanent `will-change`, Canvas without `PerformanceMonitor`, `backdrop-blur` in components, hover-only critical content. Exits non-zero on any `FAIL`. Plain Node — no extra deps.
+
+Pair it with the standard gate:
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+npm run audit:cdesign
+```
+
+## Visual QA
+
+Sweep these viewport widths in browser DevTools (or via screenshot tooling) before handoff:
+
+| Width | Device class                                |
+|-------|---------------------------------------------|
+| 1440  | Desktop primary                             |
+| 1024  | Laptop / iPad landscape                     |
+| 768   | iPad portrait / small laptop                |
+| 430   | iPhone 15 Pro Max                           |
+| 390   | iPhone 15 / 14                              |
+| 375   | iPhone SE / small Android                   |
+
+Block handoff if any viewport shows:
+
+- Horizontal scroll (overflow-x: hidden missed on a section)
+- Headline clipped, truncated, or with broken line-wrapping
+- Fixed UI (header, scroll-progress) overlapping content
+- Blank Canvas (R3F failed to mount, or PerformanceMonitor killed DPR to 0)
+- CTA unreadable — contrast, size below 44px tap target, or hidden by safe-area
+- Pinned ScrollTrigger section jumping, double-scrolling, or unpinning early
+- Body copy below 14px (illegible)
+- Mobile downgrade that erased visual identity (hero became a flat CSS fade, fonts changed, color palette flattened) — reduce intensity, never identity
 
 ## Used with cdesign skill
 

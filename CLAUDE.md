@@ -31,5 +31,20 @@ All changes must be applied as DELTA — never rewrite the project from scratch.
 - Scene transitions: 800–1400ms
 - Ambient motion: 3–12s
 
+## Pre-handoff gate
+
+Before declaring a task done, run — and verify all four pass:
+
+```bash
+npm run lint          # warnings allowed, errors block
+npm run typecheck     # tsc --noEmit
+npm run build         # next build
+npm run audit:cdesign # static blocker scan
+```
+
+Re-run `npm run lint` after `build` if anything was regenerated. When browser screenshot QA is available, sweep `README.md` → Visual QA viewports (1440 / 1024 / 768 / 430 / 390 / 375) before handoff. Never ship without confirming mobile widths.
+
+Mobile downgrades must preserve visual identity — keep the metaphor, typography, color rhythm. Only reduce motion intensity, DPR, or shader complexity. Don't replace the hero with a flat CSS fade.
+
 ## Stack
 Next 15, React 19, TypeScript, Tailwind v4, Motion (motion/react), GSAP 3.13, Lenis 1.3, R3F v9, Drei, tailwind-variants
