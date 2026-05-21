@@ -1,10 +1,10 @@
 "use client";
 
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { Center, Environment } from "@react-three/drei";
+import { Center, Environment, PerformanceMonitor } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import { useScroll } from "motion/react";
-import { useMemo, useRef, Suspense } from "react";
+import { useMemo, useRef, useState, Suspense } from "react";
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 
@@ -59,8 +59,8 @@ function ExtrudedSVG({
     <Center>
       {/* Flip Y because SVG coords are top-down, Three.js is bottom-up */}
       <group ref={groupRef} scale={[0.01, -0.01, 0.01]}>
-        {shapes.map(({ geometry, fill }, i) => (
-          <mesh key={i} geometry={geometry} castShadow receiveShadow>
+        {shapes.map(({ geometry, fill }) => (
+          <mesh key={geometry.uuid} geometry={geometry} castShadow receiveShadow>
             <meshStandardMaterial
               color={fill && fill !== "none" ? fill : color}
               metalness={metalness}
@@ -111,6 +111,7 @@ export function SvgLogo3D({
   className = "",
 }: SvgLogo3DProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [dpr, setDpr] = useState(1.5);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
@@ -118,26 +119,31 @@ export function SvgLogo3D({
 
   return (
     <div ref={containerRef} className={`relative w-full h-[100dvh] ${className}`}>
-      <Canvas camera={{ position: [0, 0, 8], fov: 45 }} dpr={[1, 2]}>
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
-        <directionalLight position={[-5, -3, 2]} intensity={0.4} color="#5e6ad2" />
-        <Suspense fallback={null}>
-          <Environment preset="city" />
-          <ExtrudedSVG
-            svgUrl={svgUrl}
-            scrollProgress={scrollYProgress}
-            depth={depth}
-            color={color}
-            metalness={metalness}
-            roughness={roughness}
-          />
-        </Suspense>
-        {withBloom && (
-          <EffectComposer>
-            <Bloom luminanceThreshold={0.6} luminanceSmoothing={0.9} intensity={0.5} mipmapBlur />
-          </EffectComposer>
-        )}
+      <Canvas camera={{ position: [0, 0, 8], fov: 45 }} dpr={dpr}>
+        <PerformanceMonitor
+          onIncline={() => setDpr(2)}
+          onDecline={() => setDpr(1)}
+        >
+          <ambientLight intensity={0.4} />
+          <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
+          <directionalLight position={[-5, -3, 2]} intensity={0.4} color="#5e6ad2" />
+          <Suspense fallback={null}>
+            <Environment preset="city" />
+            <ExtrudedSVG
+              svgUrl={svgUrl}
+              scrollProgress={scrollYProgress}
+              depth={depth}
+              color={color}
+              metalness={metalness}
+              roughness={roughness}
+            />
+          </Suspense>
+          {withBloom && (
+            <EffectComposer>
+              <Bloom luminanceThreshold={0.6} luminanceSmoothing={0.9} intensity={0.5} mipmapBlur />
+            </EffectComposer>
+          )}
+        </PerformanceMonitor>
       </Canvas>
     </div>
   );

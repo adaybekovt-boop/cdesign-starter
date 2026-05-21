@@ -1,9 +1,10 @@
 "use client";
 
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { PerformanceMonitor } from "@react-three/drei";
 import { EffectComposer, Bloom, Noise } from "@react-three/postprocessing";
 import { useScroll } from "motion/react";
-import { useRef, Suspense } from "react";
+import { useRef, useState, Suspense } from "react";
 import * as THREE from "three";
 
 function Plane({ photoUrl, scrollProgress }: { photoUrl: string; scrollProgress: ReturnType<typeof useScroll>["scrollYProgress"] }) {
@@ -43,26 +44,32 @@ interface PhotoTo3DProps {
  */
 export function PhotoTo3D({ photoUrl, withPostFX = true, className = "" }: PhotoTo3DProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [dpr, setDpr] = useState(1.5);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
 
   return (
-    <div ref={containerRef} className={`relative h-[150vh] ${className}`}>
+    <div ref={containerRef} className={`relative min-h-[150dvh] ${className}`}>
       <div className="sticky top-0 h-[100dvh] w-full">
-        <Canvas camera={{ position: [0, 0, 4], fov: 45 }} dpr={[1, 2]}>
-          <ambientLight intensity={0.9} />
-          <directionalLight position={[5, 5, 5]} intensity={0.7} />
-          <Suspense fallback={null}>
-            <Plane photoUrl={photoUrl} scrollProgress={scrollYProgress} />
-          </Suspense>
-          {withPostFX && (
-            <EffectComposer>
-              <Bloom luminanceThreshold={0.7} luminanceSmoothing={0.9} intensity={0.8} mipmapBlur />
-              <Noise opacity={0.04} />
-            </EffectComposer>
-          )}
+        <Canvas camera={{ position: [0, 0, 4], fov: 45 }} dpr={dpr}>
+          <PerformanceMonitor
+            onIncline={() => setDpr(2)}
+            onDecline={() => setDpr(1)}
+          >
+            <ambientLight intensity={0.9} />
+            <directionalLight position={[5, 5, 5]} intensity={0.7} />
+            <Suspense fallback={null}>
+              <Plane photoUrl={photoUrl} scrollProgress={scrollYProgress} />
+            </Suspense>
+            {withPostFX && (
+              <EffectComposer>
+                <Bloom luminanceThreshold={0.7} luminanceSmoothing={0.9} intensity={0.8} mipmapBlur />
+                <Noise opacity={0.04} />
+              </EffectComposer>
+            )}
+          </PerformanceMonitor>
         </Canvas>
       </div>
     </div>

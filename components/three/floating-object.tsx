@@ -1,10 +1,10 @@
 "use client";
 
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { Float, Environment } from "@react-three/drei";
+import { Float, Environment, PerformanceMonitor } from "@react-three/drei";
 import { EffectComposer, Bloom, Noise } from "@react-three/postprocessing";
 import { useScroll } from "motion/react";
-import { useRef, Suspense } from "react";
+import { useRef, useState, Suspense } from "react";
 import * as THREE from "three";
 
 function FloatingPlane({
@@ -80,6 +80,7 @@ interface FloatingObjectProps {
 export function FloatingObject({ imageUrl, withPostFX = true, className = "" }: FloatingObjectProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mouse = useRef({ x: 0, y: 0 });
+  const [dpr, setDpr] = useState(1.5);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -100,20 +101,25 @@ export function FloatingObject({ imageUrl, withPostFX = true, className = "" }: 
       onMouseMove={handleMouseMove}
       className={`relative w-full h-[100dvh] ${className}`}
     >
-      <Canvas camera={{ position: [0, 0, 5], fov: 45 }} dpr={[1, 2]}>
-        <ambientLight intensity={1.0} />
-        <directionalLight position={[5, 5, 5]} intensity={0.8} />
-        <directionalLight position={[-3, -2, 2]} intensity={0.3} color="#5e6ad2" />
-        <Suspense fallback={null}>
-          <Environment preset="studio" />
-          <FloatingPlane imageUrl={imageUrl} scrollProgress={scrollYProgress} mouse={mouse} />
-        </Suspense>
-        {withPostFX && (
-          <EffectComposer>
-            <Bloom luminanceThreshold={0.8} luminanceSmoothing={0.9} intensity={0.6} mipmapBlur />
-            <Noise opacity={0.03} />
-          </EffectComposer>
-        )}
+      <Canvas camera={{ position: [0, 0, 5], fov: 45 }} dpr={dpr}>
+        <PerformanceMonitor
+          onIncline={() => setDpr(2)}
+          onDecline={() => setDpr(1)}
+        >
+          <ambientLight intensity={1.0} />
+          <directionalLight position={[5, 5, 5]} intensity={0.8} />
+          <directionalLight position={[-3, -2, 2]} intensity={0.3} color="#5e6ad2" />
+          <Suspense fallback={null}>
+            <Environment preset="studio" />
+            <FloatingPlane imageUrl={imageUrl} scrollProgress={scrollYProgress} mouse={mouse} />
+          </Suspense>
+          {withPostFX && (
+            <EffectComposer>
+              <Bloom luminanceThreshold={0.8} luminanceSmoothing={0.9} intensity={0.6} mipmapBlur />
+              <Noise opacity={0.03} />
+            </EffectComposer>
+          )}
+        </PerformanceMonitor>
       </Canvas>
     </div>
   );
