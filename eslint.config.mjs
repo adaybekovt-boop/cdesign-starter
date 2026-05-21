@@ -10,17 +10,23 @@ const compat = new FlatCompat({
 });
 
 export default [
+  // Global ignores — must live in its own config object (no rules/files) to apply repo-wide.
+  {
+    ignores: [
+      ".next/**",
+      "node_modules/**",
+      "public/**",
+      "next-env.d.ts",
+      "*.config.{js,mjs,ts}",
+      "tsconfig.tsbuildinfo",
+      "scripts/**",
+    ],
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     rules: {
       "@next/next/no-img-element": "error",
       "react-hooks/exhaustive-deps": "warn",
     },
-    ignores: [
-      ".next/**",
-      "node_modules/**",
-      "public/**",
-      "next-env.d.ts",
-    ],
   },
 ];
