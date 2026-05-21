@@ -30,7 +30,8 @@ export function SmoothScrollProvider({ children }: { children: ReactNode }) {
     const lenis = new Lenis({
       lerp: 0.05,
       wheelMultiplier: 1,
-      syncTouch: true,
+      // syncTouch: true breaks momentum scroll on iOS — let native touch scroll through.
+      syncTouch: false,
       autoRaf: false,
     });
 

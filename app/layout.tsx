@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Hanken_Grotesk } from "next/font/google";
 import { SmoothScrollProvider } from "@/lib/lenis";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
@@ -16,6 +16,13 @@ const hanken = Hanken_Grotesk({
 export const metadata: Metadata = {
   title: "cdesign starter",
   description: "Cinematic landing page starter",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // cover = render under iOS notch / Android nav, paired with env(safe-area-inset-*) in CSS.
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
