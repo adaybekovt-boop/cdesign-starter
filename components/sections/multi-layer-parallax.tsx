@@ -47,12 +47,12 @@ export function MultiLayerParallax({ layers, className = "" }: { layers: Layer[]
     <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
       {layers.map((layer, i) => (
         <div
-          key={i}
+          key={`layer-${i}-${layer.speed}`}
           ref={(el) => {
             layerRefs.current[i] = el;
           }}
           className={`absolute inset-0 ${layer.className ?? ""}`}
-          style={{ zIndex: i, willChange: "transform" }}
+          style={{ zIndex: i }}
         >
           {layer.content}
         </div>

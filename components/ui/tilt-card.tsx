@@ -9,6 +9,11 @@ interface TiltCardProps {
   maxTilt?: number; // degrees
 }
 
+function isCoarsePointer() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
 export function TiltCard({ children, className = "", maxTilt = 8 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
@@ -20,7 +25,7 @@ export function TiltCard({ children, className = "", maxTilt = 8 }: TiltCardProp
   const rotateX = useTransform(sy, [-0.5, 0.5], [maxTilt, -maxTilt]);
 
   const onMove = (e: React.MouseEvent) => {
-    if (!ref.current) return;
+    if (!ref.current || isCoarsePointer()) return;
     const rect = ref.current.getBoundingClientRect();
     x.set((e.clientX - rect.left) / rect.width - 0.5);
     y.set((e.clientY - rect.top) / rect.height - 0.5);
@@ -37,7 +42,7 @@ export function TiltCard({ children, className = "", maxTilt = 8 }: TiltCardProp
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       style={{ rotateX, rotateY, transformPerspective: 1000 }}
-      className={`will-change-transform ${className}`}
+      className={className}
     >
       {children}
     </motion.div>

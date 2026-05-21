@@ -32,6 +32,8 @@ export function MagneticButton({ children, onClick, className = "", pull = 0.3 }
 
   const handleMove = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!ref.current) return;
+    // Coarse pointers (touch) get the tap-only experience — no magnetic pull on a stray hover.
+    if (window.matchMedia("(pointer: coarse)").matches) return;
     const rect = ref.current.getBoundingClientRect();
     x.set((e.clientX - rect.left - rect.width / 2) * pull);
     y.set((e.clientY - rect.top - rect.height / 2) * pull);
@@ -49,7 +51,7 @@ export function MagneticButton({ children, onClick, className = "", pull = 0.3 }
       onMouseLeave={handleLeave}
       onClick={onClick}
       style={{ x: xSpring, y: ySpring }}
-      className={`relative px-6 py-3 rounded-full bg-foreground text-background font-medium text-sm tracking-tight ${className}`}
+      className={`relative min-h-11 px-6 py-3 rounded-full bg-foreground text-background font-medium text-sm tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background ${className}`}
       whileTap={{ scale: 0.97 }}
     >
       <motion.span style={{ x: textX, y: textY }} className="inline-block">

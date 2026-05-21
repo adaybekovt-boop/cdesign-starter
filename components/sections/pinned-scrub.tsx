@@ -61,8 +61,8 @@ export function PinnedScrub({ steps }: { steps: Step[] }) {
       className="relative min-h-[100dvh] grid grid-cols-1 lg:grid-cols-2 gap-12 px-6 md:px-16 py-24"
     >
       <div className="space-y-[80vh]">
-        {steps.map((s, i) => (
-          <div key={i} className="cdesign-step">
+        {steps.map((s) => (
+          <div key={`step-${s.title}`} className="cdesign-step">
             <h3 className="text-3xl md:text-4xl font-medium tracking-tight mb-4">{s.title}</h3>
             <p className="text-muted text-lg leading-relaxed max-w-md">{s.body}</p>
           </div>
@@ -71,7 +71,7 @@ export function PinnedScrub({ steps }: { steps: Step[] }) {
       <div className="relative">
         {steps.map((s, i) => (
           <div
-            key={i}
+            key={`visual-${s.title}`}
             className="cdesign-visual absolute inset-0 flex items-center justify-center"
             style={{ opacity: i === 0 ? 1 : 0 }}
           >

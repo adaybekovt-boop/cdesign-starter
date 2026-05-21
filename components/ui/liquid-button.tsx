@@ -19,6 +19,7 @@ export const liquidButtonVariants = tv({
       "liquid-button",
       "relative isolate overflow-hidden cursor-pointer rounded-full",
       "transition-transform",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     ],
     shine: "liquid-button__shine",
     content: "relative z-10",
