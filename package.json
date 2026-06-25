@@ -10,8 +10,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "audit:cdesign": "node scripts/cdesign-audit.mjs",
-    "pack:cdesign": "node scripts/create-cdesign-zip.mjs"
+    "audit:cdesign": "node scripts/cdesign-audit.mjs"
   },
   "dependencies": {
     "next": "^15.0.3",

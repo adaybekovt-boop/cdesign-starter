@@ -149,18 +149,7 @@ npm run lint
 npm run typecheck
 npm run build
 npm run audit:cdesign
-npm run pack:cdesign
 ```
-
-## Handoff archive
-
-After a landing is generated or edited, run:
-
-```bash
-npm run pack:cdesign
-```
-
-This writes a fresh `cdesign-starter.zip` in the project root. The archive includes the current source and configuration, but skips generated/runtime folders such as `node_modules/`, `.next/`, `out/`, `build/`, `.git/`, `.env*`, logs, TypeScript build info, and older ZIP files. Use it as the portable handoff bundle for the finished landing.
 
 ## Visual QA
 

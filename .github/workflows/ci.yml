@@ -31,6 +31,3 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Package cdesign archive
-        run: npm run pack:cdesign
