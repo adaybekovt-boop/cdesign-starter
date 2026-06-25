@@ -50,9 +50,10 @@ export function SvgPathDraw({
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!wrapperRef.current) return;
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
 
-    const svg = wrapperRef.current.querySelector("svg");
+    const svg = wrapper.querySelector("svg");
     if (!svg) return;
 
     const paths = svg.querySelectorAll<SVGGeometryElement>("path, line, polyline, polygon, circle, rect");
@@ -73,7 +74,7 @@ export function SvgPathDraw({
       scrollTrigger:
         trigger === "scroll"
           ? {
-              trigger: wrapperRef.current,
+              trigger: wrapper,
               start: "top 80%",
               toggleActions: "play none none reverse",
             }
@@ -83,7 +84,7 @@ export function SvgPathDraw({
     return () => {
       animation.kill();
       ScrollTrigger.getAll().forEach((st) => {
-        if (st.trigger === wrapperRef.current) st.kill();
+        if (st.trigger === wrapper) st.kill();
       });
     };
   }, [trigger, duration, stagger, ease]);
