@@ -62,6 +62,7 @@ If font files are missing, the build will fall back to system fonts.
 
 ### 3D (`components/three/`)
 - `photo-to-3d.tsx` — turn any image into scroll-controlled 3D plane
+- `model-hero.tsx` - render one licensed GLB/GLTF product or brand model
 - `geometric-hero.tsx` — abstract 3D hero (torus knot + Bloom)
 - `canvas-scrub.tsx` — Apple-style frame-by-frame video alternative
 - `svg-logo-3d.tsx` — extrude SVG logo into 3D, scroll-controlled rotation
@@ -94,6 +95,20 @@ For `<FloatingObject>` you need a PNG with transparent background. Quick options
 - **Adobe Express**: https://www.adobe.com/express/feature/image/remove-background (free, unlimited)
 
 For complex hair/fur edges, Photoshop's Select Subject + refine is still the gold standard.
+
+### Objects: optimized GLB/GLTF
+Use `ModelHero` only for a real product, brand, or reference object. Store its licensed model at
+`public/models/<name>.glb` and pass the same relative URL, for example:
+
+```tsx
+<ModelHero modelUrl="/models/bottle.glb" ariaLabel="Glass bottle" scale={1.15}>
+  {/* sparse hero copy */}
+</ModelHero>
+```
+
+Record source and license in `public/models/ASSETS.md`, keep one model per viewport, and optimize
+with Draco/Meshopt and KTX2 textures where compatible. When no meaningful model exists, use a
+product photograph or 2D composition; never substitute generic geometry.
 
 ### What this starter does NOT do
 - ❌ Auto-remove backgrounds from photos (use tools above instead)
