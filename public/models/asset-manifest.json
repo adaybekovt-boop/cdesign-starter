@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "assets": {
+    "cdesign-organic-knot": {
+      "id": "cdesign-organic-knot",
+      "file": "/models/cdesign-organic-knot.glb",
+      "format": "glb",
+      "purpose": "abstract-cinematic-hero-demo",
+      "provenance": {
+        "source": "original-cdesign-starter-asset",
+        "license": "MIT",
+        "attribution": "cdesign-starter"
+      },
+      "quality": {
+        "isPlaceholder": false,
+        "hasTextures": false,
+        "optimization": ["binary-glb", "geometry-only"],
+        "mobileFallback": "static-2d-composition-required"
+      },
+      "presentation": {
+        "recommendedScale": 1.35,
+        "ariaLabel": "Abstract organic knot"
+      }
+    }
+  }
+}

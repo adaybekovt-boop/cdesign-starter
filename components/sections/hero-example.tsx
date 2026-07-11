@@ -1,3 +1,4 @@
+import { ModelHeroClient } from "@/components/three/model-hero-client";
 import { SplitTextReveal } from "@/components/ui/split-text-reveal";
 import { MagneticButton } from "@/components/ui/magnetic-button";
 
@@ -8,7 +9,7 @@ import { MagneticButton } from "@/components/ui/magnetic-button";
  */
 export function HeroExample() {
   return (
-    <section className="relative min-h-[100dvh] flex items-center px-6 md:px-16 lg:px-24 py-24">
+    <ModelHeroClient modelUrl="/models/cdesign-organic-knot.glb" ariaLabel="Abstract organic knot" scale={1.35}>
       <div className="max-w-5xl">
         <p className="text-sm text-muted mb-6 tracking-wide">
           cdesign starter — replace with your idea
@@ -27,6 +28,6 @@ export function HeroExample() {
           <MagneticButton>Get started</MagneticButton>
         </div>
       </div>
-    </section>
+    </ModelHeroClient>
   );
 }

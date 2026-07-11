@@ -28,6 +28,7 @@ export default function Home() {
 
           3D / R3F (components/three/):
           - photo-to-3d.tsx         (image as scroll-controlled 3D plane)
+          - model-hero.tsx          (licensed GLB/GLTF product or brand model)
           - geometric-hero.tsx      (abstract torus knot hero)
           - svg-logo-3d.tsx         (extrude SVG logo into 3D, rotates)
           - floating-object.tsx     (transparent PNG floats with mouse parallax)
