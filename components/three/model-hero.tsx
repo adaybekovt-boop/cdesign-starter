@@ -47,6 +47,10 @@ interface ModelHeroProps {
   scale?: number
   /** Keep this to one overlay with the hero copy and CTA. */
   children?: ReactNode
+  /** Optional project-specific surface or contrast layer. */
+  overlay?: ReactNode
+  /** Project-specific placement for copy/controls. */
+  contentClassName?: string
   className?: string
 }
 
@@ -62,6 +66,8 @@ export function ModelHero({
   ariaLabel,
   scale = 1,
   children,
+  overlay,
+  contentClassName = "",
   className = "",
 }: ModelHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -91,9 +97,9 @@ export function ModelHero({
           </EffectComposer>
         </PerformanceMonitor>
       </Canvas>
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
+      {overlay}
       {children && (
-        <div className="pointer-events-none absolute inset-0 flex items-center px-6 md:px-16 lg:px-24">
+        <div className={`pointer-events-none absolute inset-0 ${contentClassName}`}>
           <div className="pointer-events-auto">{children}</div>
         </div>
       )}

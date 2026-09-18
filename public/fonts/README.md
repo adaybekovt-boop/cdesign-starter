@@ -1,19 +1,13 @@
-# Fonts
+# Project fonts
 
-This project uses:
-- **Hanken Grotesk** (Variable) — primary sans-serif
-- **Migra** — accent display serif (optional)
+The starter does not preselect a font.
 
-## How fonts load
+After the typography field in DESIGN_GENOME is approved:
 
-Hanken Grotesk loads via `next/font/google` — no local files needed.
+1. confirm the font license and required scripts;
+2. prefer local .woff2 files when available;
+3. register families with next/font in app/layout.tsx;
+4. map display, body, mono, and accent roles in app/globals.css;
+5. test loading, fallback metrics, Cyrillic/Kazakh coverage when relevant, and mobile line breaks.
 
-Migra is optional. If you have .woff2 files, place them here:
-- `public/fonts/Migra-Regular.woff2`
-- `public/fonts/Migra-Italic.woff2`
-
-If Migra files are missing, the fallback serif stack is used automatically. Build will NOT fail.
-
-## Adding custom fonts
-
-Place .woff2 files in this folder and register them in `app/layout.tsx` via `next/font/local`.
+Do not reuse a fixed pair merely because an earlier cdesign project used it.

@@ -2,13 +2,16 @@
 @import "lenis/dist/lenis.css";
 
 /* ═══════════════════════════════════════════════════════════════
-   DESIGN TOKENS — never hardcode hex in components, always use vars
+   NEUTRAL TOKEN SLOTS
+   Generate Mode replaces identity-bearing values from DESIGN_GENOME.
+   These values make the empty starter build; they are not a design preset.
    ═══════════════════════════════════════════════════════════════ */
 
+/* CDESIGN_NEUTRAL_TOKENS_REPLACE: generated projects must replace this block and remove this marker. */
 :root {
   color-scheme: light dark;
 
-  /* ─── Color system: Linear-dark recipe by default ─── */
+  /* ─── Neutral scaffold colors — replace per project ─── */
   --background: light-dark(#fafaf7, #08090a);
   --foreground: light-dark(#0a0a0a, #f7f8f8);
   --elevated: light-dark(#f1f2f4, #151516);
@@ -95,7 +98,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     inset 0 -1px 0 rgba(0, 0, 0, 0.04);
 
-  /* ─── Easing (Emil Kowalski standards) ─── */
+  /* ─── Curve library — choose per motion role, no universal default ─── */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-snappy: cubic-bezier(0.4, 0, 0.2, 1);
@@ -117,11 +120,9 @@
   --color-accent: var(--accent);
   --color-accent-muted: var(--accent-muted);
 
-  /* next/font/google sets --font-sans on <html> via className; this @theme
-     entry registers the token so Tailwind generates the font-sans utility. */
-  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
-  /* Replace with Migra when .woff2 files are added to public/fonts/ */
-  --font-display: "Georgia", "Times New Roman", serif;
+  /* No project font is preselected. Generate Mode registers licensed fonts. */
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-display: ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 
   --shadow-xs: var(--shadow-xs);
