@@ -4,20 +4,14 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import SplitType from "split-type";
 
-/**
- * SplitTextReveal — aggressive stagger reveal (0.02s) for hero headlines
- *
- * Stagger calibration (per research):
- *   - 0.025+ = generic AI animation, FAIL
- *   - 0.02 = target (Vercel/Linear tier)
- *   - 0.015 = aggressive cinema
- *   - below 0.015 = unreadable mush, FAIL
- */
+/** SplitTextReveal is an opt-in word-mask primitive, not a default hero treatment. */
 interface SplitTextRevealProps {
   children: string;
   as?: "h1" | "h2" | "h3" | "p";
   stagger?: number;
   delay?: number;
+  duration?: number;
+  ease?: string;
   className?: string;
 }
 
@@ -26,6 +20,8 @@ export function SplitTextReveal({
   as: Tag = "h1",
   stagger = 0.02,
   delay = 0.15,
+  duration = 0.9,
+  ease = "cubic-bezier(0.16, 1, 0.3, 1)",
   className = "",
 }: SplitTextRevealProps) {
   const ref = useRef<HTMLElement>(null);
@@ -56,9 +52,9 @@ export function SplitTextReveal({
     gsap.from(split.words ?? [], {
       yPercent: 110,
       opacity: 0,
-      duration: 0.9,
+      duration,
       stagger,
-      ease: "cubic-bezier(0.16, 1, 0.3, 1)",
+      ease,
       delay,
     });
 
@@ -66,7 +62,7 @@ export function SplitTextReveal({
       split.revert();
       delete element.dataset.cdesignSplit;
     };
-  }, [stagger, delay]);
+  }, [stagger, delay, duration, ease]);
 
   return (
     <Tag ref={ref as never} className={className}>

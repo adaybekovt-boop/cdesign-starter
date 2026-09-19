@@ -111,7 +111,9 @@ const LINE_RULES = [
     level: "WARN",
     exts: TSX_EXTS,
     test: (l) =>
-      /\bopacity-0\b/.test(l) && /\bhover:opacity-(100|[1-9]\d?)\b/.test(l),
+      /\bopacity-0\b/.test(l) &&
+      /\bhover:opacity-(100|[1-9]\d?)\b/.test(l) &&
+      !/\bpointer-events-none\b/.test(l),
     desc: "Hover-only reveal is invisible on touch. Confirm non-critical.",
   },
 ];
@@ -147,9 +149,104 @@ for (const file of allFiles) {
   if (TSX_EXTS.has(ext)) auditCanvasPerf(file, content);
 }
 
+function auditProjectMetadata() {
+  const intentPath = join(".cdesign", "INTENT.md");
+  const fingerprintPath = join(".cdesign", "FINGERPRINT.json");
+
+  if (existsSync(intentPath)) {
+    const intent = readFileSync(intentPath, "utf8");
+    const legacyIntent =
+      /Selected vibe/i.test(intent) && !intent.includes("## DESIGN_GENOME");
+    const requiredSections = [
+      "## DESIGN_GENOME",
+      "## SIGNATURE_DECISION",
+      "## REJECTED_DEFAULT",
+      "## FINGERPRINT",
+      "## DESIGN_LOCKS",
+      "## MOTION_LOCKS",
+    ];
+    if (legacyIntent) {
+      flag(
+        "WARN",
+        "legacy INTENT compatibility",
+        intentPath,
+        1,
+        "Legacy Selected vibe detected; Edit Mode may infer a provisional genome without rewriting.",
+      );
+    } else {
+      for (const section of requiredSections) {
+        if (!intent.includes(section)) {
+          flag("FAIL", "v3 INTENT schema", intentPath, 1, "Missing " + section);
+        }
+      }
+    }
+
+    if (!legacyIntent) {
+      const globalsPath = join("app", "globals.css");
+      if (
+        existsSync(globalsPath) &&
+        readFileSync(globalsPath, "utf8").includes("CDESIGN_NEUTRAL_TOKENS_REPLACE")
+      ) {
+        flag(
+          "FAIL",
+          "neutral starter leakage",
+          globalsPath,
+          1,
+          "Replace neutral starter tokens from DESIGN_GENOME and remove the marker.",
+        );
+      }
+
+      const pagePath = join("app", "page.tsx");
+      if (
+        existsSync(pagePath) &&
+        readFileSync(pagePath, "utf8").includes("data-cdesign-canvas")
+      ) {
+        flag(
+          "FAIL",
+          "neutral starter leakage",
+          pagePath,
+          1,
+          "Replace the neutral generation canvas.",
+        );
+      }
+    }
+  }
+
+  if (existsSync(fingerprintPath)) {
+    const requiredKeys = [
+      "hero_composition",
+      "navigation_pattern",
+      "typography_pairing_category",
+      "palette_strategy",
+      "dominant_geometry",
+      "section_rhythm",
+      "section_sequence",
+      "motion_mechanism",
+      "imagery_treatment",
+      "signature_motif",
+    ];
+    try {
+      const fingerprint = JSON.parse(readFileSync(fingerprintPath, "utf8"));
+      for (const key of requiredKeys) {
+        if (!(key in fingerprint)) {
+          flag("FAIL", "v3 FINGERPRINT schema", fingerprintPath, 1, "Missing " + key);
+        }
+      }
+    } catch (error) {
+      flag("FAIL", "v3 FINGERPRINT schema", fingerprintPath, 1, String(error));
+    }
+  }
+}
+
+auditProjectMetadata();
+
 const RULES_CHECKED = [
   ...LINE_RULES.map((r) => ({ id: r.id, level: r.level })),
   { id: "Canvas without PerformanceMonitor", level: "FAIL" },
+  { id: "v3 INTENT schema", level: "FAIL" },
+  { id: "v3 FINGERPRINT schema", level: "FAIL" },
+  { id: "legacy INTENT compatibility", level: "WARN" },
+  { id: "neutral starter leakage", level: "FAIL" },
 ];
 
 const failures = findings.filter((f) => f.level === "FAIL").length;

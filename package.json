@@ -1,9 +1,9 @@
 {
   "name": "cdesign-starter",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "license": "MIT",
   "private": true,
-  "description": "Cinematic landing page starter for cdesign skill. Pre-configured stack: Next 15 + Tailwind v4 + Motion + GSAP + Lenis + R3F. Built to defeat AI slop.",
+  "description": "Neutral production starter for cdesign v3: Next.js, Motion, GSAP, Lenis, optional R3F, device tiers, and audit tooling.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

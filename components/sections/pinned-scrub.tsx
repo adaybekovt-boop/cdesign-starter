@@ -14,11 +14,33 @@ interface Step {
   visual: ReactNode;
 }
 
+interface PinnedScrubProps {
+  steps: Step[];
+  pinDistance?: string;
+  transitionDuration?: number;
+  transitionEase?: string;
+  className: string;
+  stepsClassName: string;
+  visualsClassName: string;
+  stepClassName?: string;
+  visualClassName?: string;
+}
+
 /**
- * PinnedScrub — Stripe/Vercel-tier pinned section with content swap
- * Pin a container, crossfade visuals as text scrolls past.
+ * PinnedScrub — headless-enough pinned state primitive.
+ * Defaults are intentionally plain; pass project shell classes from DESIGN_GENOME.
  */
-export function PinnedScrub({ steps }: { steps: Step[] }) {
+export function PinnedScrub({
+  steps,
+  pinDistance = "+=300%",
+  transitionDuration = 0.5,
+  transitionEase = "power2.inOut",
+  className,
+  stepsClassName,
+  visualsClassName,
+  stepClassName = "",
+  visualClassName = "",
+}: PinnedScrubProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,7 +53,7 @@ export function PinnedScrub({ steps }: { steps: Step[] }) {
       ScrollTrigger.create({
         trigger: wrapperRef.current,
         start: "top top",
-        end: "+=300%",
+        end: pinDistance,
         pin: true,
         anticipatePin: 1,
       });
@@ -47,32 +69,41 @@ export function PinnedScrub({ steps }: { steps: Step[] }) {
       });
 
       function crossfade(index: number) {
-        gsap.to(visuals, { opacity: 0, duration: 0.5, ease: "power2.inOut", overwrite: true });
-        gsap.to(visuals[index], { opacity: 1, duration: 0.5, ease: "power2.inOut" });
+        gsap.to(visuals, {
+          opacity: 0,
+          duration: transitionDuration,
+          ease: transitionEase,
+          overwrite: true,
+        });
+        gsap.to(visuals[index], {
+          opacity: 1,
+          duration: transitionDuration,
+          ease: transitionEase,
+        });
       }
     }, wrapperRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [pinDistance, transitionDuration, transitionEase]);
 
   return (
     <div
       ref={wrapperRef}
-      className="relative min-h-[100dvh] grid grid-cols-1 lg:grid-cols-2 gap-12 px-6 md:px-16 py-24"
+      className={`relative min-h-[100dvh] ${className}`}
     >
-      <div className="space-y-[80vh]">
+      <div className={stepsClassName}>
         {steps.map((s) => (
-          <div key={`step-${s.title}`} className="cdesign-step">
-            <h3 className="text-3xl md:text-4xl font-medium tracking-tight mb-4">{s.title}</h3>
-            <p className="text-muted text-lg leading-relaxed max-w-md">{s.body}</p>
+          <div key={`step-${s.title}`} className={`cdesign-step ${stepClassName}`}>
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
           </div>
         ))}
       </div>
-      <div className="relative">
+      <div className={`relative ${visualsClassName}`}>
         {steps.map((s, i) => (
           <div
             key={`visual-${s.title}`}
-            className="cdesign-visual absolute inset-0 flex items-center justify-center"
+            className={`cdesign-visual absolute inset-0 ${visualClassName}`}
             style={{ opacity: i === 0 ? 1 : 0 }}
           >
             {s.visual}

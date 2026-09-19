@@ -33,7 +33,8 @@ interface GeometricHeroProps {
 
 /**
  * GeometricHero — full-screen abstract 3D hero with overlaid text
- * Use when no user photo available and reference signals tech/futuristic vibe.
+ * Use only when the approved genome calls for abstract geometry. Replace the
+ * demo torus, material, lighting, and motion; never use it as a missing-asset fallback.
  */
 export function GeometricHero({ children, withPostFX = true }: GeometricHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);

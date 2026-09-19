@@ -1,17 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Hanken_Grotesk } from "next/font/google";
 import { SmoothScrollProvider } from "@/lib/lenis";
-import { ScrollProgress } from "@/components/ui/scroll-progress";
-import { GrainOverlay } from "@/components/ui/grain-overlay";
 import { DeviceTierProvider } from "@/components/ui/device-tier-provider";
-import { LiquidGlassFilter } from "@/components/ui/liquid-glass-filter";
 import "./globals.css";
-
-const hanken = Hanken_Grotesk({
-  subsets: ["latin", "cyrillic-ext"],
-  variable: "--font-sans",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "cdesign starter",
@@ -27,16 +17,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    // cdesign skill: change `lang` based on generated copy language — ru / kk / en. See SKILL.md Phase 3.
-    <html lang="en" className={`${hanken.variable} dark`}>
+    // Generate Mode replaces language, metadata, fonts, and identity tokens from DESIGN_GENOME.
+    <html lang="en">
       <body>
         <DeviceTierProvider />
-        <LiquidGlassFilter />
-        <SmoothScrollProvider>
-          <ScrollProgress />
-          {children}
-          <GrainOverlay />
-        </SmoothScrollProvider>
+        <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
     </html>
   );
